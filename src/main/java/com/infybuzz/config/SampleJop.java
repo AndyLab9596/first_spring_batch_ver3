@@ -25,6 +25,7 @@ public class SampleJop {
         return jobBuilderFactory
                 .get("First Job")
                 .start(firstStep())
+                .next(secondStep())
                 .build();
 
     }
@@ -36,6 +37,12 @@ public class SampleJop {
                 .build();
     }
 
+    private Step secondStep() {
+        return stepBuilderFactory.get("Second Step")
+            .tasklet(secondTask())
+            .build();
+    }
+
     private Tasklet firstTask() {
         return new Tasklet() {
 
@@ -45,6 +52,18 @@ public class SampleJop {
                 return RepeatStatus.FINISHED;
             }
 
+        };
+    }
+
+    private Tasklet secondTask() {
+        return new Tasklet() {
+
+            @Override
+            public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+                System.out.println("This is second taskket step");
+                return RepeatStatus.FINISHED;
+            }
+            
         };
     }
 }
